@@ -38,6 +38,40 @@ import { PluggableTreemap } from "./pluggableVisualizations/treeMap/PluggableTre
 import { PluggableFunnelChart } from "./pluggableVisualizations/funnelChart/PluggableFunnelChart";
 import { PluggableBubbleChart } from "./pluggableVisualizations/bubbleChart/PluggableBubbleChart";
 
+import {
+    PluggableExperimentalGeoChart
+} from './pluggableVisualizations/experimentalGeoChart/PluggableExperimentalGeoChart';
+import { PluggableExperimentalNLG } from './pluggableVisualizations/experimentalNLG/PluggableExperimentalNLG';
+import {
+    PluggableMasterDetailChart
+} from './pluggableVisualizations/experimentalMasterDetailChart/PluggableMasterDetailChart';
+import { PluggableCustomChart } from './pluggableVisualizations/customChart/PluggableCustomChart';
+
+import {
+    PluggableWordCloudChart
+} from './pluggableVisualizations/experimentalWordCloud/PluggableWordCloudChart';
+
+import {
+    PluggableHistogramChart
+} from './pluggableVisualizations/experimentalHistogram/PluggableHistogramChart';
+
+import {
+    PluggableParetoChart
+} from './pluggableVisualizations/experimentalpareto/PluggableParetoChart';
+
+import {
+    PluggableSankeyDiagram
+} from './pluggableVisualizations/experimentalSankeyDiagram/PluggableSankeyDiagram';
+import {
+    PluggableBulletChart
+} from './pluggableVisualizations/experimentalBulletChart/PluggableBulletChart';
+import {
+    PluggableWaterfallChart
+} from './pluggableVisualizations/experimentalWaterfall/PluggableWaterfallChart';
+import {
+    PluggableBoxplotChart
+} from './pluggableVisualizations/experimentalBoxplot/PluggableBoxplotChart';
+
 // visualization catalogue - add your new visualization here
 const VisualizationsCatalog = {
     bar: PluggableBarChart,
@@ -55,6 +89,17 @@ const VisualizationsCatalog = {
     combo2: PluggableComboChart, // new combo chart
     treemap: PluggableTreemap,
     funnel: PluggableFunnelChart,
+    experimental_geochart: PluggableExperimentalGeoChart,
+    nlg: PluggableExperimentalNLG,
+    experimental_masterdetail: PluggableMasterDetailChart,
+    custom: PluggableCustomChart,
+    wordcloud: PluggableWordCloudChart,
+    histogram: PluggableHistogramChart,
+    pareto: PluggableParetoChart, 
+    sankey: PluggableSankeyDiagram,
+    bullet: PluggableBulletChart,
+    waterfall: PluggableWaterfallChart,
+    boxplot: PluggableBoxplotChart    
 };
 
 export interface IBaseVisualizationProps extends IVisCallbacks {
