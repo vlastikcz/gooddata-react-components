@@ -43,7 +43,6 @@ import CustomChartConfigurationPanel from '../../configurationPanels/CustomChart
 import { AbstractPluggableVisualization } from "../AbstractPluggableVisualization";
 
 export class PluggableCustomChart extends AbstractPluggableVisualization {
-   protected configPanelNode: HTMLElement;
    protected visualizationProperties: IVisualizationProperties;
    protected isError: boolean;
    protected isLoading: boolean;
@@ -51,6 +50,7 @@ export class PluggableCustomChart extends AbstractPluggableVisualization {
    private callbacks: IVisCallbacks;
    protected type: string;
    private element: string;
+   private configPanelElement:string;
    protected environment: string;
    private locale: ILocale;
    protected supportedPropertiesList: string[];
@@ -62,8 +62,8 @@ export class PluggableCustomChart extends AbstractPluggableVisualization {
        this.callbacks = props.callbacks;
        this.type = 'custom';
        this.locale = props.locale ? props.locale : DEFAULT_LOCALE;
-       this.configPanelNode = document.querySelector(props.configPanelElement) as HTMLElement;
-
+       this.configPanelElement = props.configPanelElement;
+  
        this.supportedPropertiesList = [
            'custom.svg'
        ];
@@ -140,7 +140,7 @@ export class PluggableCustomChart extends AbstractPluggableVisualization {
     }
 
    protected renderConfigurationPanel() {
-        if (this.configPanelNode) {
+        if (document.querySelector(this.configPanelElement)) {
             const pushData = get(this.callbacks, 'pushData', noop);
 
             const properties: IVisualizationProperties =
@@ -158,7 +158,7 @@ export class PluggableCustomChart extends AbstractPluggableVisualization {
                     isError={this.isError}
                     isLoading={this.isLoading}
                 />,
-                this.configPanelNode
+                document.querySelector(this.configPanelElement)
             );
         }
     }

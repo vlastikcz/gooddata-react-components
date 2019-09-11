@@ -49,7 +49,6 @@ import {
 import { AbstractPluggableVisualization } from "../AbstractPluggableVisualization";
 
 export class PluggableExperimentalGeoChart extends AbstractPluggableVisualization {
-   protected configPanelNode: HTMLElement;
    protected visualizationProperties: IVisualizationProperties;
    protected isError: boolean;
    protected isLoading: boolean;
@@ -57,6 +56,7 @@ export class PluggableExperimentalGeoChart extends AbstractPluggableVisualizatio
    private callbacks: IVisCallbacks;
    private intl: InjectedIntl;
    private element: string;
+   private configPanelElement:string;
    private environment: string;
    private locale: ILocale;
    private type: string;
@@ -69,7 +69,7 @@ export class PluggableExperimentalGeoChart extends AbstractPluggableVisualizatio
        this.callbacks = props.callbacks;
        this.locale = props.locale ? props.locale : DEFAULT_LOCALE;
        this.intl = createInternalIntl(this.locale);
-       this.configPanelNode = document.querySelector(props.configPanelElement) as HTMLElement;
+       this.configPanelElement = props.configPanelElement;
        this.isError = false;
        this.isLoading = false;
 
@@ -170,7 +170,7 @@ export class PluggableExperimentalGeoChart extends AbstractPluggableVisualizatio
     }
 
    protected renderConfigurationPanel() {
-        if (this.configPanelNode) {
+        if (document.querySelector(this.configPanelElement)) {
             const pushData = get(this.callbacks, 'pushData', noop);
 
             const properties: IVisualizationProperties =
@@ -188,7 +188,7 @@ export class PluggableExperimentalGeoChart extends AbstractPluggableVisualizatio
                     isError={this.isError}
                     isLoading={this.isLoading}
                 />,
-                this.configPanelNode
+                document.querySelector(this.configPanelElement)
             );
         }
     }
