@@ -62,6 +62,7 @@ export function getComboConfiguration(config?: IChartConfig) {
         chart: {
             type: getDefaultChartType(config),
             spacingTop: 20,
+            zoomType: "x",
         },
         plotOptions: {
             column: {

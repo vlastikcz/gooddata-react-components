@@ -4,6 +4,7 @@ import cloneDeep = require("lodash/cloneDeep");
 const BUBBLE_TEMPLATE = {
     chart: {
         type: "bubble",
+        zoomType: "xy",
     },
     plotOptions: {
         bubble: {

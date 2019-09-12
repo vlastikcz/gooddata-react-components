@@ -6,6 +6,7 @@ const LINE_WIDTH = 3;
 const AREA_TEMPLATE: any = {
     chart: {
         type: "area",
+        zoomType: "x",
     },
     plotOptions: {
         area: {

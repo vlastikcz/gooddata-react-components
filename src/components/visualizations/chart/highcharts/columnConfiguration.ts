@@ -7,6 +7,7 @@ const COLUMN_TEMPLATE = {
     chart: {
         type: "column",
         spacingTop: 20,
+        zoomType: "x",
     },
     plotOptions: {
         column: {

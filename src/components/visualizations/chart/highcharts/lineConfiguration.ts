@@ -6,6 +6,7 @@ export const LINE_WIDTH = 3;
 const LINE_TEMPLATE: any = {
     chart: {
         type: "line",
+        zoomType: "x",
     },
     plotOptions: {
         series: {
