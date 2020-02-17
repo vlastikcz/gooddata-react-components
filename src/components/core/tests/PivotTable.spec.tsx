@@ -1,22 +1,21 @@
-// (C) 2007-2019 GoodData Corporation
+// (C) 2007-2020 GoodData Corporation
 import * as React from "react";
 import { mount, ReactWrapper } from "enzyme";
 import { oneAttributeOneMeasureSortByMeasureExecutionObject } from "../../../execution/fixtures/ExecuteAfm.fixtures";
 import { createIntlMock } from "../../visualizations/utils/intlUtils";
-import noop = require("lodash/noop");
 
 import {
+    IPivotTableInnerProps,
     PivotTable,
     PivotTableInner,
-    IPivotTableInnerProps,
     WATCHING_TABLE_RENDERED_INTERVAL,
     WATCHING_TABLE_RENDERED_MAX_TIME,
 } from "../PivotTable";
 import {
-    oneMeasureDataSource,
-    oneAttributeOneMeasureDataSource,
-    twoMeasuresOneDimensionDataSource,
     executionObjectWithTotalsDataSource,
+    oneAttributeOneMeasureDataSource,
+    oneMeasureDataSource,
+    twoMeasuresOneDimensionDataSource,
 } from "../../tests/mocks";
 import { getParsedFields } from "../pivotTable/agGridUtils";
 import { GroupingProviderFactory } from "../pivotTable/GroupingProvider";
@@ -27,6 +26,7 @@ import { waitFor } from "../../filters/AttributeFilter/tests/utils";
 import { IGridCellEvent } from "../pivotTable/agGridTypes";
 import { IDrillEventExtended } from "../../../interfaces/DrillEvents";
 import { Execution } from "@gooddata/typings";
+import noop = require("lodash/noop");
 
 const intl = createIntlMock();
 
@@ -361,6 +361,42 @@ describe("PivotTable", () => {
 
             expect(updateStickyRow).toHaveBeenCalledTimes(1);
             expect(updateStickyRowPosition).toHaveBeenCalledTimes(1);
+        });
+
+        it("should auto-resize columns if executing and default width should fit the viewport", async () => {
+            const wrapper = renderComponent({
+                config: { columnSizing: { defaultWidth: "viewport" } },
+            });
+
+            const tableInstance = getTableInstanceFromWrapper(wrapper);
+            jest.spyOn(tableInstance, "getGridApi").mockImplementation(() => ({}));
+            const updateStickyRow = jest.spyOn(tableInstance, "updateStickyRowContent");
+            updateStickyRow.mockImplementation(noop);
+            const autoresizeColumns = jest.spyOn(tableInstance, "autoresizeVisibleColumns");
+            autoresizeColumns.mockImplementation(noop);
+            getPinnedTopRowElement.mockImplementation(() => ({}));
+
+            await waitFor(waitForDataLoaded(wrapper));
+
+            expect(autoresizeColumns).toHaveBeenCalledTimes(1);
+        });
+
+        it("should not auto-resize columns it the column sizing is not configured", async () => {
+            const wrapper = renderComponent({
+                config: { columnSizing: undefined },
+            });
+
+            const tableInstance = getTableInstanceFromWrapper(wrapper);
+            jest.spyOn(tableInstance, "getGridApi").mockImplementation(() => ({}));
+            const updateStickyRow = jest.spyOn(tableInstance, "updateStickyRowContent");
+            updateStickyRow.mockImplementation(noop);
+            const autoresizeColumns = jest.spyOn(tableInstance, "autoresizeVisibleColumns");
+            autoresizeColumns.mockImplementation(noop);
+            getPinnedTopRowElement.mockImplementation(() => ({}));
+
+            await waitFor(waitForDataLoaded(wrapper));
+
+            expect(autoresizeColumns).toHaveBeenCalledTimes(0);
         });
     });
 
