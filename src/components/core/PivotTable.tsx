@@ -254,8 +254,10 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
             if (agGridDataSourceUpdateNeeded) {
                 this.updateAGGridDataSource();
             }
-            if (this.props.dataSource.getFingerprint() !== prevProps.dataSource.getFingerprint()) {
-                // TODO dimensions - resultSpec (TOTALS)
+
+            const dataSourceChanged =
+                this.props.dataSource.getFingerprint() !== prevProps.dataSource.getFingerprint();
+            if (dataSourceChanged || totalsPropsChanged || totalsStateChanged) {
                 this.columnWidths = {};
                 this.setState({
                     resized: false,
