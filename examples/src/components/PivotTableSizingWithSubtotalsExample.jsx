@@ -59,10 +59,10 @@ const totals = [
 
 const columns = [Model.attribute(quarterDateIdentifier), Model.attribute(monthDateIdentifier)];
 
-export class PivotTableSizingExample extends Component {
+export class PivotTableSizingWithSubtotalsExample extends Component {
     render() {
         return (
-            <div style={{ height: 500 }} className="s-pivot-table-row-grouping">
+            <div style={{ width: 900, height: 600, border: "1px solid red" }} className="s-pivot-table-row-grouping">
                 <PivotTable
                     projectId={projectId}
                     measures={measures}
@@ -86,4 +86,4 @@ export class PivotTableSizingExample extends Component {
     }
 }
 
-export default PivotTableSizingExample;
+export default PivotTableSizingWithSubtotalsExample;
