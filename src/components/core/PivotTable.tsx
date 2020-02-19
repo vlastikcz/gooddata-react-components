@@ -202,7 +202,6 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
         this.gridApi = null;
 
         this.setGroupingProvider(props.groupRows);
-        // this.autoresizeColumns = debounce(this.autoresizeColumns, 50); // long timeout causes jumping of columns when scrolling from right to left
     }
 
     public componentWillMount() {
