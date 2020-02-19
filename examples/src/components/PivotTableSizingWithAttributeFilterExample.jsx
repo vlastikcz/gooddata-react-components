@@ -115,7 +115,7 @@ export class PivotTableSizingWithAttributeFilterExample extends Component {
                 />
                 <div
                     style={{ width: 800, height: 600, border: "1px solid green" }}
-                    className="s-attribute-filter-pivot-table"
+                    className="s-pivot-table-sizing-with-attribute-filter"
                 >
                     {error ? (
                         <ErrorComponent message={error} />

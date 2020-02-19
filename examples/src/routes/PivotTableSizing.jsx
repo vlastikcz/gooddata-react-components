@@ -15,36 +15,22 @@ export const PivotTableSizing = () => (
 
         <hr className="separator" />
 
-        <h2 id="measures-row-attributes-and-column-attributes">Simple table</h2>
+        <h2 id="simple-table">Simple table</h2>
         <ExampleWithSource for={() => <PivotTableSizingExample />} source={PivotTableSizingExampleSRC} />
 
         <hr className="separator" />
 
-        <h2 id="measures-row-attributes-and-column-attributes">Table with subtotals</h2>
+        <h2 id="table-with-subtotals">Table with subtotals</h2>
         <ExampleWithSource
-            for={() => (
-                <PivotTableSizingWithSubtotalsExample
-                    withAttributes
-                    withMeasures
-                    withPivot
-                    className="s-measures-row-attributes-and-column-attributes"
-                />
-            )}
+            for={() => <PivotTableSizingWithSubtotalsExample withAttributes withMeasures withPivot />}
             source={PivotTableSizingWithSubtotalsExampleSRC}
         />
 
         <hr className="separator" />
 
-        <h2 id="measures-row-attributes-and-column-attributes">Table with attribute filter</h2>
+        <h2 id="table-with-attribute-filter">Table with attribute filter</h2>
         <ExampleWithSource
-            for={() => (
-                <PivotTableSizingWithAttributeFilterExample
-                    withAttributes
-                    withMeasures
-                    withPivot
-                    className="s-measures-row-attributes-and-column-attributes"
-                />
-            )}
+            for={() => <PivotTableSizingWithAttributeFilterExample withAttributes withMeasures withPivot />}
             source={PivotTableSizingWithAttributeFilterExampleSRC}
         />
     </div>

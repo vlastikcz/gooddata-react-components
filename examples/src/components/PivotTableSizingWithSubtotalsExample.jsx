@@ -70,7 +70,7 @@ export class PivotTableSizingWithSubtotalsExample extends Component {
         return (
             <div
                 style={{ width: 900, height: 600, border: "1px solid red" }}
-                className="s-pivot-table-row-grouping"
+                className="s-pivot-table-sizing-with-subtotals"
             >
                 <PivotTable
                     projectId={projectId}
