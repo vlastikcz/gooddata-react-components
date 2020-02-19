@@ -7,8 +7,9 @@ export interface IMenu {
     aggregationsSubMenu?: boolean;
 }
 
+export type DefaultColumnWidth = "viewport" | "unset"; // | "auto"  | number; can be added later see ONE-4276
 export interface IColumnSizing {
-    defaultWidth: "viewport"; // "viewport" | "auto" | "unset" | number; see ONE-4276
+    defaultWidth: DefaultColumnWidth;
 }
 
 export interface IPivotTableConfig {

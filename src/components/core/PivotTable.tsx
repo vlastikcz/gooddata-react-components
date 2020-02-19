@@ -143,6 +143,7 @@ const AG_NUMERIC_HEADER_CLASSNAME = "ag-numeric-header";
 
 export const WATCHING_TABLE_RENDERED_INTERVAL = 500;
 export const WATCHING_TABLE_RENDERED_MAX_TIME = 15000;
+const AGGRID_RENDER_NEW_COLUMNS_TIMEOUT = 100;
 
 /**
  * Pivot Table react component
@@ -186,7 +187,7 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
             desiredHeight: props.config.maxHeight,
 
             sortedByFirstAttribute: true,
-            resized: false, // props.resize === initial ? false : true, TODO: odpodminkovat sirky sloupcu 200? co je v developu
+            resized: false,
         };
 
         this.agGridDataSource = null;
@@ -415,13 +416,9 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
         columns.filter((column: any) => !column.width).map((column: Column) => column.getColId());
 
     private autoresizeVisibleColumns = (columnApi: ColumnApi, previouslyResizedColumnIds: string[]) => {
-        // getAllDisplayedVirtualColumns together with debounce has issue with jumping of columns when scrolling from right to the left
-        // needs to be compared with getAll(Displayed)Columns + debounce what is more effective
-        // let displayedVirtualColumns = event.columnApi.getAllDisplayedVirtualColumns();
         const displayedVirtualColumns = columnApi.getAllDisplayedVirtualColumns();
         const autoWidthColumnIds: string[] = this.getColumnIdsToAutoresize(displayedVirtualColumns);
         if (previouslyResizedColumnIds.length >= autoWidthColumnIds.length) {
-            console.log("autosizing DONE");
             this.resizing = false;
             this.columnWidths = columnApi.getAllDisplayedVirtualColumns().reduce((acc, col) => {
                 return { ...acc, [this.getColumnIdentifier(col.getDefinition())]: col.getActualWidth() };
@@ -431,13 +428,12 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
             });
             return;
         }
-        console.log("autosizing: ", autoWidthColumnIds, displayedVirtualColumns);
-        // do some diff of ids from previous run?
+
         const newColumnIds = difference(autoWidthColumnIds, previouslyResizedColumnIds);
         columnApi.autoSizeColumns(newColumnIds);
         setTimeout(() => {
             this.autoresizeVisibleColumns(columnApi, autoWidthColumnIds);
-        }, 100);
+        }, AGGRID_RENDER_NEW_COLUMNS_TIMEOUT);
     };
 
     private autoresizeColumns = (event: AgGridEvent) => {
@@ -543,12 +539,12 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
         );
     };
 
+    private autoresizeEnabled = () =>
+        this.props.config.columnSizing && this.props.config.columnSizing.defaultWidth === "viewport";
+
     private onModelUpdated = (event: ModelUpdatedEvent) => {
         this.updateStickyRow();
-        const autoresizeColumns =
-            this.props.config.columnSizing &&
-            this.props.config.columnSizing.defaultWidth == "viewport" &&
-            this.state.execution;
+        const autoresizeColumns = this.autoresizeEnabled() && this.getExecution();
         if (autoresizeColumns) {
             this.autoresizeColumns(event);
         }
