@@ -411,12 +411,12 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
         this.setGridDataSource();
     }
 
-    private getColumnIdsToAutoresize = (columns: Column[]): string[] =>
-        columns.filter((column: any) => !column.width).map((column: Column) => column.getColId());
+    private getColumnIds = (columns: Column[]): string[] =>
+        columns.map((column: Column) => column.getColId());
 
     private autoresizeVisibleColumns = (columnApi: ColumnApi, previouslyResizedColumnIds: string[]) => {
         const displayedVirtualColumns = columnApi.getAllDisplayedVirtualColumns();
-        const autoWidthColumnIds: string[] = this.getColumnIdsToAutoresize(displayedVirtualColumns);
+        const autoWidthColumnIds: string[] = this.getColumnIds(displayedVirtualColumns);
         if (previouslyResizedColumnIds.length >= autoWidthColumnIds.length) {
             this.resizing = false;
             this.columnWidths = columnApi.getAllDisplayedVirtualColumns().reduce((acc, col) => {
