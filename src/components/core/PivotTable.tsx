@@ -45,7 +45,12 @@ import {
     isDrillEventContextTableExtended,
 } from "../../interfaces/DrillEvents";
 import { IHeaderPredicate } from "../../interfaces/HeaderPredicate";
-import { IMappingHeader, isMappingHeaderAttribute } from "../../interfaces/MappingHeader";
+import {
+    IMappingHeader,
+    isMappingHeaderAttribute,
+    isMappingHeaderMeasureItem,
+    isMappingHeaderAttributeItem,
+} from "../../interfaces/MappingHeader";
 import { IMenuAggregationClickConfig, IPivotTableConfig } from "../../interfaces/PivotTable";
 import { IDataSourceProviderInjectedProps } from "../afm/DataSourceProvider";
 import { LoadingComponent } from "../simple/LoadingComponent";
@@ -132,6 +137,9 @@ export interface IPivotTableState {
     resized: boolean;
 }
 
+export interface IColumnWidths {
+    [colId: string]: number;
+}
 export type IPivotTableInnerProps = IPivotTableProps &
     ILoadingInjectedProps &
     IDataSourceProviderInjectedProps &
@@ -169,7 +177,7 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
         left: 0,
     };
 
-    private columnWidths: { [colId: string]: number } = {};
+    private columnWidths: IColumnWidths = {};
     private watchingIntervalId: number | null;
     private watchingTimeoutId: number | null;
     private resizing: boolean = false;
@@ -322,15 +330,6 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
     //
     //
 
-    private getColumnIdentifier(columnDef: any) {
-        return columnDef.drillItems
-            .filter((item: any) => item.attributeHeaderItem || item.measureHeaderItem)
-            .map((item: any) => {
-                return item.attributeHeaderItem ? item.attributeHeaderItem.uri : item.measureHeaderItem.uri;
-            })
-            .join(".");
-    }
-
     private isTableHidden() {
         return this.state.columnDefs.length === 0;
     }
@@ -421,7 +420,10 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
         if (previouslyResizedColumnIds.length >= autoWidthColumnIds.length) {
             this.resizing = false;
             this.columnWidths = columnApi.getAllDisplayedVirtualColumns().reduce((acc, col) => {
-                return { ...acc, [this.getColumnIdentifier(col.getDefinition())]: col.getActualWidth() };
+                return {
+                    ...acc,
+                    [this.getColumnIdentifier(col.getDefinition() as IGridHeader)]: col.getActualWidth(),
+                };
             }, {});
             this.setState({
                 resized: true,
@@ -705,7 +707,9 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
         this.updateDesiredHeight(this.state.execution.executionResult);
         if (columnEvent && columnEvent.source !== "autosizeColumns" && columnEvent.columns) {
             columnEvent.columns.forEach(column => {
-                this.columnWidths[this.getColumnIdentifier(column.getDefinition())] = column.getActualWidth();
+                this.columnWidths[
+                    this.getColumnIdentifier(column.getDefinition() as IGridHeader)
+                ] = column.getActualWidth();
             });
         }
     };
@@ -779,15 +783,9 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
             getAfmFilters: this.getAfmFilters,
             intl: this.props.intl,
         };
-        const cDefLeafs = getTreeLeaves(columnDefs);
-        cDefLeafs.forEach(cDef => {
-            if (cDef) {
-                const look = this.columnWidths[this.getColumnIdentifier(cDef)];
-                if (look) {
-                    cDef.width = look;
-                }
-            }
-        });
+
+        this.enrichColumnDefinitionsWithWidths(getTreeLeaves(columnDefs), this.columnWidths);
+
         return {
             // Initial data
             columnDefs,
@@ -1065,6 +1063,32 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
 
     private isHeaderResizer(target: HTMLElement) {
         return target.classList.contains("ag-header-cell-resize");
+    }
+
+    private getColumnIdentifier(columnDef: IGridHeader): string {
+        return columnDef.drillItems
+            .map((item: IMappingHeader) => {
+                if (isMappingHeaderAttributeItem(item)) {
+                    return item.attributeHeaderItem.uri;
+                } else if (isMappingHeaderMeasureItem(item)) {
+                    return item.measureHeaderItem.uri;
+                }
+
+                return undefined;
+            })
+            .filter((item: string) => item)
+            .join(".");
+    }
+
+    private enrichColumnDefinitionsWithWidths(columnDefinitions: IGridHeader[], columnWidths: IColumnWidths) {
+        columnDefinitions.forEach((columnDefinition: IGridHeader) => {
+            if (columnDefinition) {
+                const width = columnWidths[this.getColumnIdentifier(columnDefinition)];
+                if (width) {
+                    columnDefinition.width = width;
+                }
+            }
+        });
     }
 }
 
