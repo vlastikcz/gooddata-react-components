@@ -106,17 +106,14 @@ export class PivotTableSizingWithAttributeFilterExample extends Component {
     render() {
         const { filters, error } = this.state;
         return (
-            <div className="s-attribute-filter" style={{ border: "1px solid red" }}>
+            <div className="s-pivot-table-sizing-with-attribute-filter" style={{ border: "1px solid red" }}>
                 <AttributeFilter
                     projectId={projectId}
                     filter={filters[0]}
                     onApply={this.onApply}
                     onApplyWithFilterDefinition={this.onApplyWithFilterDefinition}
                 />
-                <div
-                    style={{ width: 800, height: 600, border: "1px solid green" }}
-                    className="s-pivot-table-sizing-with-attribute-filter"
-                >
+                <div style={{ width: 800, height: 600, border: "1px solid green" }}>
                     {error ? (
                         <ErrorComponent message={error} />
                     ) : (
