@@ -6,10 +6,17 @@ import PivotTableSizingWithSubtotalsExample from "../components/PivotTableSizing
 import PivotTableSizingWithSubtotalsExampleSRC from "!raw-loader!../components/PivotTableSizingWithSubtotalsExample"; // eslint-disable-line import/no-webpack-loader-syntax, import/no-unresolved, import/extensions, import/first
 import PivotTableSizingWithAttributeFilterExample from "../components/PivotTableSizingWithAttributeFilterExample";
 import PivotTableSizingWithAttributeFilterExampleSRC from "!raw-loader!../components/PivotTableSizingWithAttributeFilterExample"; // eslint-disable-line import/no-webpack-loader-syntax, import/no-unresolved, import/extensions, import/first
+import PivotTableSizingExample from "../components/PivotTableSizingExample";
+import PivotTableSizingExampleSRC from "!raw-loader!../components/PivotTableSizingExample"; // eslint-disable-line import/no-webpack-loader-syntax, import/no-unresolved, import/extensions, import/first
 
 export const PivotTableSizing = () => (
     <div>
         <h1>Pivot Table Sizing</h1>
+
+        <hr className="separator" />
+
+        <h2 id="measures-row-attributes-and-column-attributes">Simple table</h2>
+        <ExampleWithSource for={() => <PivotTableSizingExample />} source={PivotTableSizingExampleSRC} />
 
         <hr className="separator" />
 

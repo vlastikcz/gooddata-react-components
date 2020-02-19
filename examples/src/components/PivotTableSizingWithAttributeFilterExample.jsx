@@ -15,7 +15,7 @@ import {
 
 const totalSales = Model.measure(totalSalesIdentifier)
     .format("#,##0")
-    .alias("$ Total Sales");
+    .alias("Sales");
 
 const yearDate = Model.attribute(yearDateIdentifier);
 

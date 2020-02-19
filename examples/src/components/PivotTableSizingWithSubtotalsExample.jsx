@@ -20,12 +20,18 @@ import {
 const measures = [
     Model.measure(franchiseFeesIdentifier)
         .format("#,##0")
-        .localIdentifier("franchiseFeesIdentifier"),
+        .localIdentifier("franchiseFeesIdentifier")
+        .alias("Fees"),
     Model.measure(franchiseFeesAdRoyaltyIdentifier)
         .format("#,##0")
-        .localIdentifier("franchiseFeesAdRoyaltyIdentifier"),
-    Model.measure(franchiseFeesInitialFranchiseFeeIdentifier).format("#,##0"),
-    Model.measure(franchiseFeesIdentifierOngoingRoyalty).format("#,##0"),
+        .localIdentifier("franchiseFeesAdRoyaltyIdentifier")
+        .alias("Ad Royality"),
+    Model.measure(franchiseFeesInitialFranchiseFeeIdentifier)
+        .format("#,##0")
+        .alias("Initial Fee"),
+    Model.measure(franchiseFeesIdentifierOngoingRoyalty)
+        .format("#,##0")
+        .alias("Ongoing Royalty"),
 ];
 
 const attributes = [

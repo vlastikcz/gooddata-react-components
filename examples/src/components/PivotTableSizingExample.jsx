@@ -8,7 +8,6 @@ import {
     employeeNameIdentifier,
     franchisedSalesIdentifier,
     locationNameDisplayFormIdentifier,
-    locationStateDisplayFormIdentifier,
     projectId,
 } from "../utils/fixtures";
 
@@ -20,10 +19,7 @@ const measures = [
 
 const attributes = [Model.attribute(employeeNameIdentifier)];
 
-const columns = [
-    Model.attribute(locationStateDisplayFormIdentifier).localIdentifier("state"),
-    Model.attribute(locationNameDisplayFormIdentifier).localIdentifier("location"),
-];
+const columns = [Model.attribute(locationNameDisplayFormIdentifier).localIdentifier("location")];
 
 export class PivotTableSizingExample extends Component {
     render() {
