@@ -513,7 +513,7 @@ storiesOf("Core components/PivotTable", module)
     })
     .add("auto resize columns in the viewport - simple table", () =>
         screenshotWrap(
-            <ScreenshotReadyWrapper resolver={visualizationNotLoadingResolver()}>
+            <ScreenshotReadyWrapper resolver={visualizationNotLoadingResolver()} delay={500}>
                 <div style={wrapperStyle} className="s-table">
                     <PivotTable
                         projectId="storybook"
@@ -553,7 +553,7 @@ storiesOf("Core components/PivotTable", module)
         ];
 
         return screenshotWrap(
-            <ScreenshotReadyWrapper resolver={visualizationNotLoadingResolver()}>
+            <ScreenshotReadyWrapper resolver={visualizationNotLoadingResolver()} delay={500}>
                 <div style={{ ...wrapperStyle, height: 228 }} className="s-table">
                     <PivotTable
                         projectId="storybook"
