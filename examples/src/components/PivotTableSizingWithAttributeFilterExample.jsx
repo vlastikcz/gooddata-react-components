@@ -6,28 +6,24 @@ import { VisualizationInput } from "@gooddata/typings";
 import "@gooddata/react-components/styles/css/main.css";
 
 import {
-    locationResortIdentifier,
-    locationResortUri,
     projectId,
     totalSalesIdentifier,
-    yearDateIdentifier,
+    menuItemNameAttributeDFIdentifier,
+    menuItemNameUri,
 } from "../utils/fixtures";
 
 const totalSales = Model.measure(totalSalesIdentifier)
     .format("#,##0")
     .alias("Sales");
 
-const yearDate = Model.attribute(yearDateIdentifier);
-
-const locationResort = Model.attribute(locationResortIdentifier);
+const menuItemName = Model.attribute(menuItemNameAttributeDFIdentifier);
 
 export class PivotTableSizingWithAttributeFilterExample extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            // you can put here some attr. elements as a default selection for filter and chart components
-            filters: [Model.negativeAttributeFilter(locationResortIdentifier, [])],
+            filters: [Model.negativeAttributeFilter(menuItemNameAttributeDFIdentifier, [])],
             error: null,
         };
     }
@@ -68,7 +64,7 @@ export class PivotTableSizingWithAttributeFilterExample extends Component {
 
     onError(...params) {
         // eslint-disable-next-line no-console
-        console.info("AttributeFilterExample onLoadingChanged", ...params);
+        console.info("AttributeFilterExample onError", ...params);
     }
 
     filterPositiveAttribute(filter) {
@@ -78,7 +74,7 @@ export class PivotTableSizingWithAttributeFilterExample extends Component {
                     displayForm: {
                         identifier: filter.id,
                     },
-                    in: filter.in.map(element => `${locationResortUri}/elements?id=${element}`),
+                    in: filter.in.map(element => `${menuItemNameUri}/elements?id=${element}`),
                 },
             },
         ];
@@ -96,7 +92,7 @@ export class PivotTableSizingWithAttributeFilterExample extends Component {
                     displayForm: {
                         identifier: filter.id,
                     },
-                    notIn: filter.notIn.map(element => `${locationResortUri}/elements?id=${element}`),
+                    notIn: filter.notIn.map(element => `${menuItemNameUri}/elements?id=${element}`),
                 },
             },
         ];
@@ -106,14 +102,14 @@ export class PivotTableSizingWithAttributeFilterExample extends Component {
     render() {
         const { filters, error } = this.state;
         return (
-            <div className="s-pivot-table-sizing-with-attribute-filter" style={{ border: "1px solid red" }}>
+            <div className="s-pivot-table-sizing-with-attribute-filter">
                 <AttributeFilter
                     projectId={projectId}
                     filter={filters[0]}
                     onApply={this.onApply}
                     onApplyWithFilterDefinition={this.onApplyWithFilterDefinition}
                 />
-                <div style={{ width: 800, height: 600, border: "1px solid green" }}>
+                <div style={{ width: 800, height: 600 }}>
                     {error ? (
                         <ErrorComponent message={error} />
                     ) : (
@@ -128,8 +124,7 @@ export class PivotTableSizingWithAttributeFilterExample extends Component {
                             filters={filters}
                             onLoadingChanged={this.onLoadingChanged}
                             onError={this.onError}
-                            rows={[yearDate]}
-                            columns={[locationResort]}
+                            rows={[menuItemName]}
                         />
                     )}
                 </div>
