@@ -25,6 +25,7 @@ import {
     TOTAL_M2_A1,
 } from "../data/componentProps";
 import { VisualizationInput } from "@gooddata/typings";
+import { ScreenshotReadyWrapper, visualizationNotLoadingResolver } from "../utils/ScreenshotReadyWrapper";
 
 function logTotalsChange(data: any) {
     if (data.properties && data.properties.totals) {
@@ -512,17 +513,19 @@ storiesOf("Core components/PivotTable", module)
     })
     .add("auto resize columns in the viewport - simple table", () =>
         screenshotWrap(
-            <div style={wrapperStyle} className="s-table">
-                <PivotTable
-                    projectId="storybook"
-                    measures={[MEASURE_1, MEASURE_2]}
-                    rows={[ATTRIBUTE_1]}
-                    config={{ columnSizing: { defaultWidth: "viewport" } }}
-                    onError={onErrorHandler}
-                    LoadingComponent={null}
-                    ErrorComponent={null}
-                />
-            </div>,
+            <ScreenshotReadyWrapper resolver={visualizationNotLoadingResolver()}>
+                <div style={wrapperStyle} className="s-table">
+                    <PivotTable
+                        projectId="storybook"
+                        measures={[MEASURE_1, MEASURE_2]}
+                        rows={[ATTRIBUTE_1]}
+                        config={{ columnSizing: { defaultWidth: "viewport" } }}
+                        onError={onErrorHandler}
+                        LoadingComponent={null}
+                        ErrorComponent={null}
+                    />
+                </div>
+            </ScreenshotReadyWrapper>,
         ),
     )
     .add("auto resize columns in the viewport - with grand total and subtotal", () => {
@@ -550,17 +553,19 @@ storiesOf("Core components/PivotTable", module)
         ];
 
         return screenshotWrap(
-            <div style={{ ...wrapperStyle, height: 228 }} className="s-table">
-                <PivotTable
-                    projectId="storybook"
-                    measures={measures}
-                    rows={attributes}
-                    totals={totals}
-                    config={{ columnSizing: { defaultWidth: "viewport" } }}
-                    onError={onErrorHandler}
-                    LoadingComponent={null}
-                    ErrorComponent={null}
-                />
-            </div>,
+            <ScreenshotReadyWrapper resolver={visualizationNotLoadingResolver()}>
+                <div style={{ ...wrapperStyle, height: 228 }} className="s-table">
+                    <PivotTable
+                        projectId="storybook"
+                        measures={measures}
+                        rows={attributes}
+                        totals={totals}
+                        config={{ columnSizing: { defaultWidth: "viewport" } }}
+                        onError={onErrorHandler}
+                        LoadingComponent={null}
+                        ErrorComponent={null}
+                    />
+                </div>
+            </ScreenshotReadyWrapper>,
         );
     });
