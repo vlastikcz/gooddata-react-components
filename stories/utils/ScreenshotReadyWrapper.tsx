@@ -85,7 +85,8 @@ export function visualizationNotLoadingResolver() {
     return (element: HTMLElement) => {
         return (
             element.getElementsByClassName("s-loading").length === 0 &&
-            element.getElementsByClassName("s-pivot-table").length > 0
+            element.getElementsByClassName("s-pivot-table").length > 0 &&
+            element.getElementsByClassName("s-cell-0-1").length > 0
         );
     };
 }
