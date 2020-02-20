@@ -440,6 +440,7 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
 
     private autoresizeColumns = (event: AgGridEvent) => {
         if (
+            !this.state.execution ||
             event.api.getRenderedNodes().length === 0 ||
             event.api.getInfinitePageState()[0].pageStatus !== "loaded" ||
             this.state.resized ||
