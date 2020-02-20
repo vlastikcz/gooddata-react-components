@@ -68,6 +68,32 @@ describe("PivotTable", () => {
         expect(wrapper.find(PivotTableInner)).toHaveLength(1);
     });
 
+    describe("column sizing", () => {
+        it("should auto-resize columns if executing and default width should fit the viewport", async () => {
+            const wrapper = renderComponent({
+                config: { columnSizing: { defaultWidth: "viewport" } },
+            });
+            const table = getTableInstanceFromWrapper(wrapper);
+            const autoresizeColumns = jest.spyOn(table, "autoresizeVisibleColumns");
+            autoresizeColumns.mockImplementation(noop);
+
+            await waitFor(waitForDataLoaded(wrapper));
+            expect(autoresizeColumns).toHaveBeenCalledTimes(1);
+        });
+
+        it("should not auto-resize columns it the column sizing is not configured", async () => {
+            const wrapper = renderComponent({
+                config: { columnSizing: undefined },
+            });
+            const table = getTableInstanceFromWrapper(wrapper);
+            const autoresizeColumns = jest.spyOn(table, "autoresizeVisibleColumns");
+            autoresizeColumns.mockImplementation(noop);
+
+            await waitFor(waitForDataLoaded(wrapper));
+            expect(autoresizeColumns).toHaveBeenCalledTimes(0);
+        });
+    });
+
     describe("cellClick", () => {
         const measureCellEvent: Partial<IGridCellEvent> = {
             colDef: {
@@ -286,9 +312,13 @@ describe("PivotTable", () => {
         it("should NOT group rows when not sorted by first attribute", done => {
             // check second async invocation since we are waiting for datasource to be updated with specified resultSpec
             const onDataSourceUpdateSuccess = () => {
-                expect(createProvider).toHaveBeenCalledTimes(2);
-                expect(createProvider).toHaveBeenNthCalledWith(2, false);
-                done();
+                try {
+                    expect(createProvider).toHaveBeenCalledTimes(2);
+                    expect(createProvider).toHaveBeenNthCalledWith(2, false);
+                    done();
+                } catch (error) {
+                    done(error);
+                }
             };
 
             renderComponentForGrouping({
@@ -361,42 +391,6 @@ describe("PivotTable", () => {
 
             expect(updateStickyRow).toHaveBeenCalledTimes(1);
             expect(updateStickyRowPosition).toHaveBeenCalledTimes(1);
-        });
-
-        it("should auto-resize columns if executing and default width should fit the viewport", async () => {
-            const wrapper = renderComponent({
-                config: { columnSizing: { defaultWidth: "viewport" } },
-            });
-
-            const tableInstance = getTableInstanceFromWrapper(wrapper);
-            jest.spyOn(tableInstance, "getGridApi").mockImplementation(() => ({}));
-            const updateStickyRow = jest.spyOn(tableInstance, "updateStickyRowContent");
-            updateStickyRow.mockImplementation(noop);
-            const autoresizeColumns = jest.spyOn(tableInstance, "autoresizeVisibleColumns");
-            autoresizeColumns.mockImplementation(noop);
-            getPinnedTopRowElement.mockImplementation(() => ({}));
-
-            await waitFor(waitForDataLoaded(wrapper));
-
-            expect(autoresizeColumns).toHaveBeenCalledTimes(1);
-        });
-
-        it("should not auto-resize columns it the column sizing is not configured", async () => {
-            const wrapper = renderComponent({
-                config: { columnSizing: undefined },
-            });
-
-            const tableInstance = getTableInstanceFromWrapper(wrapper);
-            jest.spyOn(tableInstance, "getGridApi").mockImplementation(() => ({}));
-            const updateStickyRow = jest.spyOn(tableInstance, "updateStickyRowContent");
-            updateStickyRow.mockImplementation(noop);
-            const autoresizeColumns = jest.spyOn(tableInstance, "autoresizeVisibleColumns");
-            autoresizeColumns.mockImplementation(noop);
-            getPinnedTopRowElement.mockImplementation(() => ({}));
-
-            await waitFor(waitForDataLoaded(wrapper));
-
-            expect(autoresizeColumns).toHaveBeenCalledTimes(0);
         });
     });
 

@@ -48,8 +48,8 @@ import { IHeaderPredicate } from "../../interfaces/HeaderPredicate";
 import {
     IMappingHeader,
     isMappingHeaderAttribute,
-    isMappingHeaderMeasureItem,
     isMappingHeaderAttributeItem,
+    isMappingHeaderMeasureItem,
 } from "../../interfaces/MappingHeader";
 import { IMenuAggregationClickConfig, IPivotTableConfig } from "../../interfaces/PivotTable";
 import { IDataSourceProviderInjectedProps } from "../afm/DataSourceProvider";
@@ -140,6 +140,7 @@ export interface IPivotTableState {
 export interface IColumnWidths {
     [colId: string]: number;
 }
+
 export type IPivotTableInnerProps = IPivotTableProps &
     ILoadingInjectedProps &
     IDataSourceProviderInjectedProps &
@@ -543,7 +544,7 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
     };
 
     private autoresizeEnabled = () =>
-        this.props.config.columnSizing && this.props.config.columnSizing.defaultWidth === "viewport";
+        this.props.config.columnSizing ? this.props.config.columnSizing.defaultWidth === "viewport" : false;
 
     private onModelUpdated = (event: ModelUpdatedEvent) => {
         this.updateStickyRow();
@@ -1067,7 +1068,7 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
     }
 
     private getColumnIdentifier(columnDef: IGridHeader): string {
-        return columnDef.drillItems
+        return (columnDef.drillItems || [])
             .map((item: IMappingHeader) => {
                 if (isMappingHeaderAttributeItem(item)) {
                     return item.attributeHeaderItem.uri;
