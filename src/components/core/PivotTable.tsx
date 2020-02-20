@@ -291,6 +291,7 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
                     right: 0,
                     top: 0,
                     bottom: 0,
+                    background: "white",
                 }}
             >
                 <LoadingComponent />
@@ -310,7 +311,6 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
                     style={style}
                     ref={this.setContainerRef}
                 >
-                    {tableLoadingOverlay}
                     <AgGridReact
                         {...gridOptions}
                         // To force Ag grid rerender because AFAIK there is no way
@@ -320,6 +320,7 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
                             this.state.agGridRerenderNumber,
                         )}
                     />
+                    {tableLoadingOverlay}
                 </div>
             </div>
         );
@@ -330,7 +331,7 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
     //
 
     private isTableHidden() {
-        return this.state.columnDefs.length === 0;
+        return this.state.columnDefs.length === 0 || (this.autoresizeEnabled() && !this.state.resized);
     }
 
     private forceRerender() {
