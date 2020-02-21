@@ -146,7 +146,12 @@ export type IPivotTableInnerProps = IPivotTableProps &
     IDataSourceProviderInjectedProps &
     WrappedComponentProps;
 
+export enum ColumnEventSourceType {
+    AUTOSIZE_COLUMNS = "autosizeColumns",
+}
+
 const DEFAULT_ROW_HEIGHT = 28;
+const DEFAULT_AUTOSIZE_PADDING = 10;
 const AG_NUMERIC_CELL_CLASSNAME = "ag-numeric-cell";
 const AG_NUMERIC_HEADER_CLASSNAME = "ag-numeric-header";
 
@@ -415,17 +420,21 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
     private getColumnIds = (columns: Column[]): string[] =>
         columns.map((column: Column) => column.getColId());
 
+    private getColumnWidths = (columns: Column[]): IColumnWidths => {
+        return columns.reduce((acc, col) => {
+            return {
+                ...acc,
+                [this.getColumnIdentifier(col.getDefinition() as IGridHeader)]: col.getActualWidth(),
+            };
+        }, {});
+    };
+
     private autoresizeVisibleColumns = (columnApi: ColumnApi, previouslyResizedColumnIds: string[]) => {
         const displayedVirtualColumns = columnApi.getAllDisplayedVirtualColumns();
         const autoWidthColumnIds: string[] = this.getColumnIds(displayedVirtualColumns);
         if (previouslyResizedColumnIds.length >= autoWidthColumnIds.length) {
             this.resizing = false;
-            this.columnWidths = columnApi.getAllDisplayedVirtualColumns().reduce((acc, col) => {
-                return {
-                    ...acc,
-                    [this.getColumnIdentifier(col.getDefinition() as IGridHeader)]: col.getActualWidth(),
-                };
-            }, {});
+            this.columnWidths = this.getColumnWidths(columnApi.getAllDisplayedVirtualColumns());
             this.setState({
                 resized: true,
             });
@@ -548,8 +557,8 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
 
     private onModelUpdated = (event: ModelUpdatedEvent) => {
         this.updateStickyRow();
-        const autoresizeColumns = this.autoresizeEnabled() && this.getExecution();
-        if (autoresizeColumns) {
+        const shouldAutoresizeColumns = this.autoresizeEnabled() && this.getExecution();
+        if (shouldAutoresizeColumns) {
             this.autoresizeColumns(event);
         }
     };
@@ -707,7 +716,11 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
             return; // only update the height once the user is done setting the column size
         }
         this.updateDesiredHeight(this.state.execution.executionResult);
-        if (columnEvent && columnEvent.source !== "autosizeColumns" && columnEvent.columns) {
+        if (
+            columnEvent &&
+            columnEvent.source !== ColumnEventSourceType.AUTOSIZE_COLUMNS &&
+            columnEvent.columns
+        ) {
             columnEvent.columns.forEach(column => {
                 this.columnWidths[
                     this.getColumnIdentifier(column.getDefinition() as IGridHeader)
@@ -903,7 +916,7 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
             // Custom CSS classes
             rowClass: "gd-table-row",
             rowHeight: DEFAULT_ROW_HEIGHT,
-            autoSizePadding: 10,
+            autoSizePadding: DEFAULT_AUTOSIZE_PADDING,
         };
     };
 
