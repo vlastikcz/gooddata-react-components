@@ -4,7 +4,6 @@ import * as React from "react";
 export interface IScreenshotReadyWrapperProps {
     resolver: (element: Element) => boolean;
     interval?: number;
-    delay?: number;
 }
 
 export interface IScreenshotReadyWrapperState {
@@ -17,7 +16,6 @@ export class ScreenshotReadyWrapper extends React.Component<
 > {
     public static defaultProps = {
         interval: 200,
-        delay: 0,
     };
 
     private timer: any = null;
@@ -55,9 +53,7 @@ export class ScreenshotReadyWrapper extends React.Component<
 
         if (result) {
             this.clearTimer();
-            setTimeout(() => {
-                this.setState({ ready: true });
-            }, this.props.delay);
+            this.setState({ ready: true });
         }
     };
 
