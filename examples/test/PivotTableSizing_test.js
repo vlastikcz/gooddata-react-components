@@ -19,7 +19,7 @@ test("should render all tables", async t => {
     );
 });
 
-async function applyAttributeFilter(t, tableWrapper) {
+async function filterOutLongAttributeElements(t, tableWrapper) {
     const secondCell = ".s-cell-0-1";
     const wrapper = Selector(tableWrapper);
     await checkCellValue(t, tableWrapper, "520,409", secondCell);
@@ -35,7 +35,8 @@ async function applyAttributeFilter(t, tableWrapper) {
 test("should trigger resize after attribute filter change", async t => {
     const tableWrapper = ".s-pivot-table-sizing-with-attribute-filter";
     const firstAttributeCellSelector = ".s-cell-0-0";
-
-    await applyAttributeFilter(t, tableWrapper);
-    await t.expect(Selector(tableWrapper).find(firstAttributeCellSelector).clientWidth).eql(128);
+    const originalWidth = await Selector(tableWrapper).find(firstAttributeCellSelector).clientWidth;
+    await filterOutLongAttributeElements(t, tableWrapper);
+    const newWidth = await Selector(tableWrapper).find(firstAttributeCellSelector).clientWidth;
+    await t.expect(newWidth).lt(originalWidth);
 });
