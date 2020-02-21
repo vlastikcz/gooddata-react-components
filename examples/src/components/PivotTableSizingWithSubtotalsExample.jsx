@@ -68,10 +68,7 @@ const columns = [Model.attribute(quarterDateIdentifier), Model.attribute(monthDa
 export class PivotTableSizingWithSubtotalsExample extends Component {
     render() {
         return (
-            <div
-                style={{ width: 900, height: 600, border: "1px solid red" }}
-                className="s-pivot-table-sizing-with-subtotals"
-            >
+            <div style={{ width: 900, height: 600 }} className="s-pivot-table-sizing-with-subtotals">
                 <PivotTable
                     projectId={projectId}
                     measures={measures}
