@@ -799,7 +799,9 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
             intl: this.props.intl,
         };
 
-        this.enrichColumnDefinitionsWithWidths(getTreeLeaves(columnDefs), this.columnWidths);
+        if (this.autoresizeEnabled()) {
+            this.enrichColumnDefinitionsWithWidths(getTreeLeaves(columnDefs), this.columnWidths);
+        }
 
         return {
             // Initial data
@@ -813,7 +815,7 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
                     enableSorting: true,
                     ...commonHeaderComponentParams,
                 },
-                minWidth: 50,
+                minWidth: 60,
                 sortable: true,
                 resizable: true,
             },
@@ -1083,7 +1085,9 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
     private getColumnIdentifier(columnDef: IGridHeader): string {
         return (columnDef.drillItems || [])
             .map((item: IMappingHeader) => {
-                if (isMappingHeaderAttributeItem(item)) {
+                if (isMappingHeaderAttribute(item)) {
+                    return item.attributeHeader.uri;
+                } else if (isMappingHeaderAttributeItem(item)) {
                     return item.attributeHeaderItem.uri;
                 } else if (isMappingHeaderMeasureItem(item)) {
                     return item.measureHeaderItem.uri;
