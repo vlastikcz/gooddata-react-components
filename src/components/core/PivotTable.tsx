@@ -799,8 +799,10 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
             intl: this.props.intl,
         };
 
+        let maxWidthProp = {};
         if (this.autoresizeEnabled()) {
             this.enrichColumnDefinitionsWithWidths(getTreeLeaves(columnDefs), this.columnWidths);
+            maxWidthProp = { maxWidth: 500 };
         }
 
         return {
@@ -816,6 +818,7 @@ export class PivotTableInner extends BaseVisualization<IPivotTableInnerProps, IP
                     ...commonHeaderComponentParams,
                 },
                 minWidth: 60,
+                ...maxWidthProp,
                 sortable: true,
                 resizable: true,
             },
