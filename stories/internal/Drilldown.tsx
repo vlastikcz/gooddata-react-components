@@ -1,6 +1,5 @@
 // (C) 2007-2020 GoodData Corporation
 import * as React from "react";
-import noop = require("lodash/noop");
 import { storiesOf } from "@storybook/react";
 import { action, decorateAction } from "@storybook/addon-actions";
 import { screenshotWrap } from "@gooddata/test-storybook";
@@ -11,8 +10,8 @@ import * as headerPredicateFactory from "../../src/factory/HeaderPredicateFactor
 import { wrap } from "../utils/wrap";
 import * as fixtures from "../test_data/fixtures";
 import {
-    VIEW_BY_DIMENSION_INDEX,
     STACK_BY_DIMENSION_INDEX,
+    VIEW_BY_DIMENSION_INDEX,
 } from "../../src/components/visualizations/chart/constants";
 
 import "../../styles/scss/charts.scss";
@@ -29,19 +28,20 @@ import {
     EXECUTION_RESULT_AM,
     TABLE_HEADERS_AM,
 } from "../../src/components/visualizations/table/fixtures/arithmericMeasures";
-import { PivotTable, Model } from "../../src";
-import { ATTRIBUTE_1, MEASURE_1, MEASURE_2, MEASURE_AM_1_2 } from "../data/componentProps";
+import { Model, PivotTable } from "../../src";
+import { ATTRIBUTE_1, ATTRIBUTE_2, MEASURE_1, MEASURE_2, MEASURE_AM_1_2 } from "../data/componentProps";
 import HeadlineTransformation from "../../src/components/visualizations/headline/HeadlineTransformation";
 import {
+    headlineWithAMMeasure,
     headlineWithOneMeasure,
     headlineWithTwoMeasures,
-    headlineWithAMMeasure,
 } from "../data/headlineExecutionFixtures";
 import {
     createHighChartResolver,
     ScreenshotReadyWrapper,
     visualizationNotLoadingResolver,
 } from "../utils/ScreenshotReadyWrapper";
+import noop = require("lodash/noop");
 
 const onFiredDrillEvent = ({
     executionContext,
@@ -1121,11 +1121,8 @@ storiesOf("Internal/Drilldown", module)
                         projectId="storybook"
                         onDrill={action("onDrill")}
                         measures={[MEASURE_1, MEASURE_2]}
-                        rows={[ATTRIBUTE_1]}
-                        drillableItems={[
-                            { uri: "/gdc/md/storybook/obj/2" },
-                            headerPredicateFactory.uriMatch("/gdc/md/storybook/obj/1"),
-                        ]}
+                        rows={[ATTRIBUTE_1, ATTRIBUTE_2]}
+                        drillableItems={[headerPredicateFactory.uriMatch("/gdc/md/storybook/obj/5.df")]}
                         LoadingComponent={null}
                         ErrorComponent={null}
                     />
